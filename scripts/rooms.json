@@ -1,0 +1,18 @@
+{
+  "_note": "Starting prompts from docs/PORTFOLIO_HANDOFF.md section 8. Walls stay empty: exhibits are mounted as meshes. Keep palette, light temperature, and materials consistent across rooms.",
+  "hall": {
+    "display_name": "Portfolio entry hall",
+    "prompt": "Vast contemporary art museum hall, polished pale concrete floor, tall white plaster walls, long linear skylight with soft warm daylight, two tall open doorways, minimalist architecture, empty walls, no artwork, no people, no signage",
+    "tags": ["portfolio", "hall"]
+  },
+  "places": {
+    "display_name": "Portfolio Places room",
+    "prompt": "Square gallery room with a large inlaid world map covering the entire floor in muted brass and stone tones, high white walls, soft overhead daylight, quiet and expansive, empty walls, no people, no text",
+    "tags": ["portfolio", "places"]
+  },
+  "records": {
+    "display_name": "Portfolio Records room (before)",
+    "prompt": "Retro-futuristic spacecraft cockpit interior, dense banks of switches, gauges and glowing panels, dramatic low light, cinematic, no people, no readable text",
+    "tags": ["portfolio", "records"]
+  }
+}

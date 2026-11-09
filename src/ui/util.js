@@ -1,14 +1,14 @@
-import { wixImage, wixOriginal } from '../content/site.js';
+import { localImage, wixImage } from '../content/site.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export function img(image, { width = 1600, cls = '', fit = 'cover' } = {}) {
-  return `<img class="${cls}" src="${wixImage(image.id, width)}" data-fallback="${wixOriginal(image.id)}" alt="${esc(image.alt)}" loading="lazy" decoding="async" style="object-fit:${fit}" />`;
+  return `<img class="${cls}" src="${localImage(image.id)}" data-fallback="${wixImage(image.id, width)}" alt="${esc(image.alt)}" loading="lazy" decoding="async" style="object-fit:${fit}" />`;
 }
 
-// Resized Wix URL first; the raw original if the resize URL fails; a quiet
-// placeholder if both fail (for example, offline or blocked).
+// Local copy first; Wix's resized copy if that's missing; a quiet placeholder
+// if both fail (for example, offline or blocked).
 export function wireImages(root) {
   root.querySelectorAll('img[data-fallback]').forEach((el) => {
     el.addEventListener('error', function onErr() {

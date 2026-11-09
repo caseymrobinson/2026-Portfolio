@@ -32,6 +32,17 @@ npm run dev
 - **All copy is authored** in `src/content/`. Never generate project facts.
 - **Visual directions** live in `src/ui/theme.js` and `src/styles/base.css`. Switch them from the Menu.
 
+### Scripts
+
+| Command | What it does |
+|---|---|
+| `node scripts/fetch-images.mjs` | Downloads project images from the old Wix site into `public/images/` as web-sized WebP |
+| `node scripts/marble.mjs credits` | Shows your World Labs API credit balance |
+| `node scripts/marble.mjs generate hall --dry-run` | Prints the generation request without spending credits |
+| `node scripts/marble.mjs generate hall` | Generates the room (draft model by default), waits about 5 minutes, saves SPZ splats, collider, panorama, and `manifest.json` to `public/splats/hall/` |
+
+Marble needs `WORLDLABS_API_KEY` in `.env` and **API credits bought at platform.worldlabs.ai** (separate from Marble app credits). Room prompts live in `scripts/rooms.json`. Behind a proxy on Node 22, prefix commands with `NODE_USE_ENV_PROXY=1`.
+
 ### URL flags for testing
 
 | Flag | Effect |
