@@ -1,0 +1,16 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+dist/
+.vercel/
+
+# Generated splat assets (large; host separately)
+*.ply
+
+# OS / editor
+.DS_Store
+*.log
