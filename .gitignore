@@ -8,8 +8,14 @@ node_modules/
 dist/
 .vercel/
 
-# Generated splat assets (large; host separately)
+# Generated splat assets. Commit the app-ready files (SOG low/preview,
+# room.json, manifest.json, collider.glb, thumbnail). Raw downloads and the
+# full-quality SOG are large; regenerate them with scripts/marble.mjs fetch.
 *.ply
+public/splats/**/*.spz
+public/splats/**/*-high.sog
+public/splats/**/world.json
+public/splats/**/operation*.json
 
 # OS / editor
 .DS_Store

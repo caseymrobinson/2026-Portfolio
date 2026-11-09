@@ -1,0 +1,13 @@
+{
+  "room": "hall",
+  "marble_url": "https://marble.worldlabs.ai/world/41100442-9ba7-4d26-9ca0-18a2d9b950ed",
+  "caption": "The scene is a vast, contemporary art museum hall, rendered in a realistic style with a serene and minimalist tone. The hall features a polished pale concrete floor that reflects the ambient light, creating a sense of expansive openness. Tall, pristine white plaster walls rise dramatically, forming a clean, unadorned backdrop that emphasizes the architectural purity of the space. A long, linear skylight runs across the ceiling, allowing soft, warm daylight to filter into the hall, illuminating the surfaces evenly without harsh shadows. Two tall, open doorways are symmetrically positioned along one of the walls, inviting passage into unseen adjacent spaces. The architecture is distinctly minimalist, characterized by clean lines, geometric forms, and an absence of decorative elements. The walls are entirely empty, devoid of any artwork, signage, or human presence, reinforcing the hall's stark, contemplative atmosphere. The concrete floor extends seamlessly throughout the entire space, meeting the white plaster walls at a sharp, precise angle. The doorways are recessed slightly into the walls, their openings revealing only deeper shadows, hinting at further architectural volumes beyond. The 360 scene is faultless.",
+  "semantics": null,
+  "files": {
+    "low": "splat-500k.spz",
+    "high": "splat-full.spz",
+    "preview": "splat-100k.spz",
+    "collider": "collider.glb",
+    "thumbnail": "thumbnail.jpg"
+  }
+}

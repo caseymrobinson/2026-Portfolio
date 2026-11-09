@@ -27,11 +27,23 @@ const state = {
   scanView: 'index',
   world: null,
   worldPromise: null,
+  hallVariant: initialHallVariant(),
   worldFailed: null,
   currentPrompt: null,
 };
 
 applyDirection(initialDirection());
+
+// Which entry hall to show: the code-built placeholder, or the Marble draft splat.
+function initialHallVariant() {
+  const param = new URLSearchParams(location.search).get('hall');
+  if (param === 'marble' || param === 'code') return param;
+  try {
+    return localStorage.getItem('hall') === 'marble' ? 'marble' : 'code';
+  } catch {
+    return 'code';
+  }
+}
 
 const store = {
   get(k) {
@@ -93,6 +105,7 @@ function loadWorld() {
     .then(({ createWorld }) =>
       createWorld(canvas, {
         direction: currentDirection,
+        hallVariant: () => state.hallVariant,
         joystickEl: $('joystick'),
         onProgress: setLoad,
         onPrompt: setPrompt,
@@ -109,6 +122,7 @@ function loadWorld() {
     )
     .then((world) => {
       state.world = world;
+      if (new URLSearchParams(location.search).has('debug')) window.__world = world;
       document.documentElement.dataset.renderer = world.deviceName;
       return world;
     })
@@ -186,7 +200,7 @@ function updateRoomChrome() {
   const room = state.world?.room;
   const inExplore = state.mode === 'explore';
   roomTag.hidden = !inExplore || !room;
-  roomTag.textContent = room === 'places' ? 'Exhibit 01 · Places' : 'Entry hall';
+  roomTag.textContent = room === 'places' ? 'Exhibit 01 · Places' : state.world?.hallVariant === 'marble' ? 'Entry hall · Marble draft' : 'Entry hall';
   const t = adventure.totals();
   progressChip.hidden = !inExplore || room !== 'places';
   progressChip.textContent = `Paths explored ${t.explored} / ${t.total}`;
@@ -275,6 +289,14 @@ function renderMenu() {
         : ''
     }
     <hr class="menu-sep" />
+    <h3 class="kicker">Entry hall version</h3>
+    <div class="look-grid" role="group" aria-label="Entry hall version">
+      <button class="look-btn hall-btn" data-hall-variant="code" aria-pressed="${state.hallVariant === 'code'}">
+        <span class="letter">1</span><strong>Built placeholder</strong><small>Code geometry with both doorways and wall text.</small></button>
+      <button class="look-btn hall-btn" data-hall-variant="marble" aria-pressed="${state.hallVariant === 'marble'}">
+        <span class="letter">2</span><strong>Marble draft</strong><small>Generated Gaussian splat, about 4 MB. First draft: one doorway, use the menu to reach rooms.</small></button>
+    </div>
+    <hr class="menu-sep" />
     <h3 class="kicker">Visual direction</h3>
     <div class="look-grid" role="group" aria-label="Visual direction">
       ${Object.values(directions)
@@ -304,6 +326,20 @@ function renderMenu() {
     }),
   );
   menuEl.querySelectorAll('[data-look]').forEach((b) => b.addEventListener('click', () => setLook(b.dataset.look)));
+  menuEl.querySelectorAll('[data-hall-variant]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      const v = b.dataset.hallVariant;
+      if (v === state.hallVariant) return;
+      state.hallVariant = v;
+      store.set('hall', v);
+      renderMenu();
+      if (state.world?.room === 'hall' && state.mode === 'explore') {
+        closeMenu();
+        await state.world.reloadRoom({ fade });
+        updateRoomChrome();
+      }
+    }),
+  );
   menuEl.querySelector('[data-hint]')?.addEventListener('click', () => {
     closeMenu();
     store.set('hint-dismissed', '');

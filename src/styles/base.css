@@ -1007,3 +1007,8 @@ body:not(.is-locked) .reticle {
   color: var(--ink-2);
   font-size: 15px;
 }
+
+/* Hall version options use the active direction, not their own preview. */
+.hall-btn strong {
+  font-size: 16px;
+}

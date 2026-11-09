@@ -1,6 +1,7 @@
 import * as pc from 'playcanvas';
 
-const EYE = 1.62;
+export const EYE_HEIGHT = 1.62;
+const EYE = EYE_HEIGHT;
 const RADIUS = 0.35;
 const WALK = 3.0;
 const RUN = 6.0;
@@ -49,7 +50,7 @@ export class Player {
     });
   }
 
-  update(dt, colliders) {
+  update(dt, colliders, grid = null) {
     if (this.glide) {
       const g = this.glide;
       g.t = Math.min(1, g.t + dt / g.duration);
@@ -89,7 +90,7 @@ export class Player {
 
     this.x += this.vx * dt;
     this.z += this.vz * dt;
-    this._collide(colliders);
+    this._collide(grid ? colliders.concat(grid.boxesNear(this.x, this.z, RADIUS + grid.cell)) : colliders);
     this._apply();
   }
 

@@ -4,7 +4,9 @@
 //   node scripts/marble.mjs credits
 //   node scripts/marble.mjs generate hall [--model marble-1.0-draft] [--seed 42] [--image path-or-url] [--dry-run]
 //   node scripts/marble.mjs resume hall <operation_id>
-//   node scripts/marble.mjs fetch hall            (re-download assets from the saved world.json)
+//   node scripts/marble.mjs fetch hall            (re-download assets; needs only manifest.json)
+//
+// Then run `node scripts/prepare-splat.mjs <room>` to make the app-ready files.
 //
 // Needs WORLDLABS_API_KEY in the environment or in .env (never commit it).
 // API credits are separate from Marble app credits: buy them at
@@ -169,7 +171,12 @@ try {
     const done = await poll(room, rest[0]);
     await saveAssets(room, done.response);
   } else if (cmd === 'fetch') {
-    const world = JSON.parse(await readFile(new URL('world.json', outDir(room)), 'utf8'));
+    // Re-download a room's assets. world.json is gitignored, so fall back to
+    // asking the API for the world by the id kept in manifest.json.
+    const local = new URL('world.json', outDir(room));
+    const world = existsSync(local)
+      ? JSON.parse(await readFile(local, 'utf8'))
+      : await call('GET', `/worlds/${JSON.parse(await readFile(new URL('manifest.json', outDir(room)), 'utf8')).world_id}`);
     await saveAssets(room, world);
   } else {
     console.log('Usage: node scripts/marble.mjs credits | generate <room> [--model m] [--seed n] [--image p] [--dry-run] | resume <room> <op> | fetch <room>');

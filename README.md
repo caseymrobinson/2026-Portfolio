@@ -41,6 +41,8 @@ npm run dev
 | `node scripts/marble.mjs generate hall --dry-run` | Prints the generation request without spending credits |
 | `node scripts/marble.mjs generate hall` | Generates the room (draft model by default), waits about 5 minutes, saves SPZ splats, collider, panorama, and `manifest.json` to `public/splats/hall/` |
 
+| `node scripts/prepare-splat.mjs hall` | Converts the splats to SOG (PlayCanvas's native format), builds a walkable collision grid from the collider mesh, writes `room.json` |
+
 Marble needs `WORLDLABS_API_KEY` in `.env` and **API credits bought at platform.worldlabs.ai** (separate from Marble app credits). Room prompts live in `scripts/rooms.json`. Behind a proxy on Node 22, prefix commands with `NODE_USE_ENV_PROXY=1`.
 
 ### URL flags for testing
@@ -50,5 +52,7 @@ Marble needs `WORLDLABS_API_KEY` in `.env` and **API credits bought at platform.
 | `?look=a` / `b` / `c` | Visual direction: Wall Label, Survey, Afterhours |
 | `?tier=low` / `high` | Force the quality tier |
 | `?device=webgl2` / `webgpu` | Force the renderer |
+| `?hall=marble` / `code` | Marble draft splat hall, or the code-built hall (also in the Menu) |
+| `?splat=high` / `preview` | Full-quality (about 2M splats) or 100K splats instead of the default 500K |
 | `#scan`, `#scan-places`, `#scan-records` | Quick read views |
 | `#explore-hall`, `#explore-places` | Jump straight into a room |

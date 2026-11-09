@@ -44,8 +44,8 @@ export async function createEngine(canvas, tier) {
 
   const options = new pc.AppOptions();
   options.graphicsDevice = device;
-  options.componentSystems = [pc.RenderComponentSystem, pc.CameraComponentSystem, pc.LightComponentSystem];
-  options.resourceHandlers = [pc.TextureHandler, pc.ContainerHandler];
+  options.componentSystems = [pc.RenderComponentSystem, pc.CameraComponentSystem, pc.LightComponentSystem, pc.GSplatComponentSystem];
+  options.resourceHandlers = [pc.TextureHandler, pc.ContainerHandler, pc.GSplatHandler];
 
   const app = new pc.AppBase(canvas);
   app.init(options);

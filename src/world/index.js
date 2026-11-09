@@ -5,6 +5,7 @@ import { Player } from './player.js';
 import { applyEnvironment } from './env.js';
 import { buildHall, HALL } from './hall.js';
 import { buildPlaces } from './placesRoom.js';
+import { buildSplatRoom } from './splatRoom.js';
 import { preloadMapData } from './mapTexture.js';
 import { ensureFonts } from '../ui/theme.js';
 
@@ -96,7 +97,17 @@ export async function createWorld(canvas, hooks) {
   };
 
   async function build(name, onProgress) {
-    if (name === 'hall') return buildHall(app, dir, { tier });
+    if (name === 'hall') {
+      if (hooks.hallVariant?.() === 'marble') {
+        try {
+          return await buildSplatRoom(app, 'hall', { tier, onProgress });
+        } catch (err) {
+          // A missing or broken splat should never strand the visitor.
+          console.warn('Marble hall unavailable, using the built hall', err);
+        }
+      }
+      return buildHall(app, dir, { tier });
+    }
     if (name === 'places') {
       await mapReady;
       return buildPlaces(app, dir, { tier, onProgress });
@@ -105,8 +116,9 @@ export async function createWorld(canvas, hooks) {
   }
 
   function applyFog(r) {
-    camera.camera.clearColor = new pc.Color(...dir.world.fog, 1);
-    app.scene.fog.type = pc.FOG_LINEAR;
+    camera.camera.clearColor = new pc.Color(...(r.clearColor || dir.world.fog), 1);
+    // Splat rooms carry their own atmosphere.
+    app.scene.fog.type = r.grid ? pc.FOG_NONE : pc.FOG_LINEAR;
     app.scene.fog.color = new pc.Color(...r.fog);
     app.scene.fog.start = 30;
     app.scene.fog.end = 90;
@@ -118,7 +130,9 @@ export async function createWorld(canvas, hooks) {
     room = next;
     roomName = name;
     applyFog(room);
-    const s = spawn || room.spawn;
+    let s = spawn || room.spawn;
+    // A spawn meant for another layout can land inside a wall here.
+    if (room.grid && room.grid.blockedAt(s.x, s.z)) s = room.spawn;
     player.teleport(s.x, s.z, s.yaw, s.pitch || 0);
     roomHooks.setPrompt(null);
     return room;
@@ -126,7 +140,7 @@ export async function createWorld(canvas, hooks) {
 
   app.on('update', (dt) => {
     if (paused || !room || busy) return;
-    player.update(dt, room.colliders);
+    player.update(dt, room.colliders, room.grid);
     room.update?.(dt, player, roomHooks);
   });
 
@@ -198,6 +212,28 @@ export async function createWorld(canvas, hooks) {
     teleportNearDoor(name) {
       const d = HALL.doors[name];
       if (d) player.teleport(d.x, d.z + 4, 0, 0);
+    },
+
+    // Test hook (exposed on window only with ?debug).
+    pose(next) {
+      if (next) player.teleport(next.x ?? player.x, next.z ?? player.z, next.yaw ?? player.yaw, next.pitch ?? player.pitch);
+      return { x: +player.x.toFixed(2), z: +player.z.toFixed(2), yaw: +player.yaw.toFixed(1), pitch: +player.pitch.toFixed(1), blocked: room?.grid ? room.grid.blockedAt(player.x, player.z) : null };
+    },
+
+    get hallVariant() {
+      return room?.variant || 'code';
+    },
+
+    async reloadRoom({ fade } = {}) {
+      if (!room || busy) return;
+      busy = true;
+      try {
+        await fade?.(true);
+        await loadRoom(roomName);
+        await fade?.(false);
+      } finally {
+        busy = false;
+      }
     },
 
     async setDirection(next) {
