@@ -14,6 +14,7 @@ dist/
 *.ply
 public/splats/**/*.spz
 public/splats/**/*-high.sog
+public/splats/**/*-high/
 public/splats/**/world.json
 public/splats/**/operation*.json
 

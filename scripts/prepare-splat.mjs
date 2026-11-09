@@ -1,5 +1,5 @@
 // Turns a downloaded Marble world into files the app can load fast:
-//  - SOG splats (PlayCanvas's native compressed format), rotated from Marble's
+//  - SOG splats (PlayCanvas's native compressed format, unbundled), rotated from Marble's
 //    OpenCV frame into PlayCanvas's Y-up frame (180 degrees around X)
 //  - a 2D walkability grid built from the collider mesh, so the player
 //    collides with walls and can't walk off the generated space
@@ -31,7 +31,9 @@ const tiers = { low: 'splat-500k.spz', high: 'splat-full.spz', preview: 'splat-1
 const sog = {};
 for (const [tier, file] of Object.entries(tiers)) {
   if (!manifest.files[tier]) continue;
-  const out = `${room}-${tier}.sog`;
+  // Unbundled SOG: meta.json plus WebP textures. Plain web types, so any
+  // static host serves it, and the textures download in parallel.
+  const out = `${room}-${tier}/meta.json`;
   const args = ['splat-transform', '-q', '-w', '-g', 'cpu', new URL(file, dir).pathname];
   if (scale !== 1) args.push('-s', String(scale));
   args.push('-r', '180,0,0', new URL(out, dir).pathname);
