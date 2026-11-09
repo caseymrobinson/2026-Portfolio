@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-look="label">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Casey Robinson · UX Designer</title>
+    <meta name="description" content="Casey Robinson, UX designer. A walkable gallery where each project is a room and you make the design calls I made." />
+    <meta name="theme-color" content="#f4f1ea" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&family=Fragment+Mono&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <link rel="preconnect" href="https://static.wixstatic.com" />
+    <script>
+      // Apply the stored visual direction before first paint to avoid a flash.
+      try {
+        var p = new URLSearchParams(location.search).get('look');
+        var map = { a: 'label', b: 'survey', c: 'afterhours' };
+        var l = map[(p || '').toLowerCase()] || p || localStorage.getItem('look');
+        if (l === 'label' || l === 'survey' || l === 'afterhours') document.documentElement.dataset.look = l;
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="is-intro">
+    <a class="sr-only" href="#scan" id="skip-link">Skip to the Quick read case studies</a>
+    <canvas id="stage" tabindex="-1" aria-label="3D gallery. Use Quick read for a text version."></canvas>
+
+    <header class="topbar">
+      <a class="brand" href="#/">Casey Robinson</a>
+      <span class="chip demo" title="Placeholder geometry and draft copy">Tech demo</span>
+      <button class="icon-btn" id="menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="menu">Menu</button>
+      <div class="mode-toggle" role="group" aria-label="View mode">
+        <button type="button" data-mode="explore" aria-pressed="false">Explore</button>
+        <button type="button" data-mode="scan" aria-pressed="false">Quick read</button>
+      </div>
+    </header>
+
+    <section id="intro" aria-labelledby="intro-title"></section>
+    <main id="scan" hidden tabindex="-1"></main>
+
+    <div class="room-tag" id="room-tag" hidden></div>
+    <div class="progress-chip chip" id="progress-chip" hidden></div>
+    <div class="reticle" aria-hidden="true"></div>
+    <div class="hud-prompt" id="prompt" hidden></div>
+    <div class="hint" id="hint" role="dialog" aria-label="Controls" hidden></div>
+    <div class="joystick" id="joystick" hidden><span></span></div>
+    <aside class="panel" id="panel" hidden aria-live="polite"></aside>
+    <div class="menu" id="menu" hidden role="menu"></div>
+    <div id="fade" aria-hidden="true"></div>
+    <div class="sr-only" id="announcer" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
