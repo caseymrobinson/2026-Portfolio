@@ -39,12 +39,12 @@ function indexView() {
     <section class="scan-section" aria-labelledby="work">
       <div class="kicker" id="work">Selected work</div>
       <div class="project-list" style="margin-top:14px">
-        <a class="project-card" href="#/scan/places">
+        <a class="project-card" href="#scan-places">
           <span class="kicker">01 · Walk-through available</span>
           <h3 class="display">${esc(places.title)}</h3>
           <p>${esc(places.takeaway)}</p>
         </a>
-        <a class="project-card" href="#/scan/records">
+        <a class="project-card" href="#scan-records">
           <span class="kicker">02 · Quick read</span>
           <h3 class="display">${esc(records.title)}</h3>
           <p>${esc(records.takeaway)}</p>
@@ -64,7 +64,7 @@ function placesView() {
   const p = places;
   return `
     <header class="scan-hero">
-      <a class="kicker" href="#/scan">← All work</a>
+      <a class="kicker" href="#scan">← All work</a>
       <h1 class="display">${esc(p.title)}</h1>
       <p class="scan-lede">${esc(p.oneLiner)}</p>
       <p class="takeaway"><strong>In 10 seconds:</strong> ${esc(p.takeaway)}</p>
@@ -98,7 +98,7 @@ function placesView() {
     </section>
     <footer class="scan-footer">
       <button class="btn btn-primary" data-explore="places">Walk through it in 3D</button>
-      <a class="btn" href="#/scan/records">Next: ${esc(records.title)}</a>
+      <a class="btn" href="#scan-records">Next: ${esc(records.title)}</a>
     </footer>`;
 }
 
@@ -106,7 +106,7 @@ function recordsView() {
   const r = records;
   return `
     <header class="scan-hero">
-      <a class="kicker" href="#/scan">← All work</a>
+      <a class="kicker" href="#scan">← All work</a>
       <h1 class="display">${esc(r.title)}</h1>
       <p class="scan-lede">${esc(r.hook)}</p>
       <p class="takeaway"><strong>In 10 seconds:</strong> ${esc(r.takeaway)}</p>
@@ -145,7 +145,7 @@ function recordsView() {
     </section>
     <p class="notice">The walk-through room for this project (from a spacecraft cockpit down to three calm inputs) is next on the list.</p>
     <footer class="scan-footer">
-      <a class="btn btn-primary" href="#/scan/places">Next: ${esc(places.title)}</a>
+      <a class="btn btn-primary" href="#scan-places">Next: ${esc(places.title)}</a>
       <button class="btn" data-explore="hall">Back to the gallery</button>
     </footer>`;
 }

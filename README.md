@@ -39,5 +39,5 @@ npm run dev
 | `?look=a` / `b` / `c` | Visual direction: Wall Label, Survey, Afterhours |
 | `?tier=low` / `high` | Force the quality tier |
 | `?device=webgl2` / `webgpu` | Force the renderer |
-| `#/scan`, `#/scan/places`, `#/scan/records` | Quick read views |
-| `#/explore/hall`, `#/explore/places` | Jump straight into a room |
+| `#scan`, `#scan-places`, `#scan-records` | Quick read views |
+| `#explore-hall`, `#explore-places` | Jump straight into a room |

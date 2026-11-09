@@ -67,12 +67,12 @@ function renderIntro() {
       <p class="intro-note">${esc(site.galleryNote)}</p>
       <div class="intro-actions">
         <button type="button" class="btn btn-primary" id="enter-btn">Enter the gallery</button>
-        <a class="btn" href="#/scan">Quick read instead</a>
+        <a class="btn" href="#scan">Quick read instead</a>
       </div>
       <div class="load-meter" aria-hidden="true"><span id="load-bar"></span></div>
       <div class="load-status" id="load-status" role="status"></div>
     </div>`;
-  $('enter-btn').addEventListener('click', () => go('#/explore/hall'));
+  $('enter-btn').addEventListener('click', () => go('#explore-hall'));
 }
 
 function setLoad(p, msg) {
@@ -144,7 +144,7 @@ async function onDoor(name) {
     // Teaser: Quick read only for now. Step back from the door so returning
     // to Explore doesn't immediately re-trigger it.
     world.teleportNearDoor('records');
-    go('#/scan/records');
+    go('#scan-records');
     return;
   }
   await enterRoom(name);
@@ -163,7 +163,7 @@ async function enterRoom(name, { spawn } = {}) {
       fade,
       onProgress: (p, msg) => announce(msg),
     });
-    if (location.hash !== `#/explore/${name}`) history.replaceState(null, '', `#/explore/${name}`);
+    if (location.hash !== `#explore-${name}`) history.replaceState(null, '', `#explore-${name}`);
     updateRoomChrome();
     if (name === 'places') {
       world.setProgress(adventure.done);
@@ -219,7 +219,7 @@ const adventure = createAdventure($('panel'), {
   },
   onFullCase() {
     adventure.close();
-    go('#/scan/places');
+    go('#scan-places');
   },
   onProgress() {
     updateRoomChrome();
@@ -259,11 +259,11 @@ function renderMenu() {
   const look = currentDirection().id;
   menuEl.innerHTML = `
     <h3 class="kicker">Rooms</h3>
-    <button class="menu-item" role="menuitem" data-go="#/explore/hall" ${room === 'hall' && state.mode === 'explore' ? 'aria-current="true"' : ''}>
+    <button class="menu-item" role="menuitem" data-go="#explore-hall" ${room === 'hall' && state.mode === 'explore' ? 'aria-current="true"' : ''}>
       <span>Entry hall</span><small>Start here</small></button>
-    <button class="menu-item" role="menuitem" data-go="#/explore/places" ${inPlaces ? 'aria-current="true"' : ''}>
+    <button class="menu-item" role="menuitem" data-go="#explore-places" ${inPlaces ? 'aria-current="true"' : ''}>
       <span>01 · Places</span><small>Walk-through, about 3 minutes</small></button>
-    <button class="menu-item" role="menuitem" data-go="#/scan/records">
+    <button class="menu-item" role="menuitem" data-go="#scan-records">
       <span>02 · Records Search</span><small>Quick read</small></button>
     ${
       inPlaces
@@ -354,11 +354,11 @@ modeButtons.forEach((b) =>
       const inExplore = state.mode === 'explore';
       if (inExplore && room === 'places') {
         state.scanAnchor = adventure.scanAnchor();
-        go('#/scan/places');
-      } else go('#/scan');
+        go('#scan-places');
+      } else go('#scan');
     } else {
       // Context-preserving: the Places case study maps back to the Places room.
-      go(state.mode === 'scan' && state.scanView === 'places' ? '#/explore/places' : `#/explore/${state.world?.room || 'hall'}`);
+      go(state.mode === 'scan' && state.scanView === 'places' ? '#explore-places' : `#explore-${state.world?.room || 'hall'}`);
     }
   }),
 );
@@ -374,8 +374,10 @@ function go(hash) {
 }
 
 async function route() {
+  // Plain hash names (#scan-places, #explore-hall) so links survive hosts
+  // that only pass simple fragments. The older #/scan/places form still works.
   const hash = location.hash.replace(/^#\/?/, '');
-  const [section, sub] = hash.split('/');
+  const [section, sub] = hash.split(/[/-]/);
   closeMenu();
 
   if (section === 'scan') {
@@ -388,7 +390,7 @@ async function route() {
     scanEl.hidden = false;
     renderScan(scanEl, state.scanView, {
       anchor: state.scanAnchor,
-      onExplore: (room) => go(`#/explore/${room}`),
+      onExplore: (room) => go(`#explore-${room}`),
     });
     state.scanAnchor = null;
     syncToggle();
@@ -441,7 +443,7 @@ async function route() {
   }
 
   // Default: intro, unless the gallery is already running.
-  if (state.world) return go(`#/explore/${state.world.room}`);
+  if (state.world) return go(`#explore-${state.world.room}`);
   state.mode = 'intro';
   body.className = 'is-intro';
   scanEl.hidden = true;
